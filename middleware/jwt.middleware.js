@@ -12,6 +12,7 @@ const verifyAdmin = async (req, res, next) => {
     req.email = decoded;
     const admin = await Users.findOne({ where: { email: email } });
     req.isAdmin = admin.rows[0].role;
+
   } catch (err) {
     return res.status(401).send("Invalid Token");
   }
@@ -37,11 +38,3 @@ module.exports = {
   verifyAdmin,
   verifyToken
 }
-
-
-
-// if (req.isAdmin !== "admin") {
-//   return res.send({
-//     message: "you are not admin",
-//   });
-// }

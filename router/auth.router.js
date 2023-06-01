@@ -1,5 +1,6 @@
 const { Router } = require("express")
-const { authRegister, authLogin } = require("../controller/auth_ctr")
+const { authRegister, authLogin, authAdminLogin } = require("../controller/auth_ctr")
+// const { verifyToken } = require("../middleware/jwt.middleware")
 // const { userValidate } = require("../validation/user_valiadtion")
 
 const authRouter = Router()
@@ -9,6 +10,7 @@ const authRouter = Router()
 
 authRouter.post("/register", authRegister)
 authRouter.post("/login", authLogin)
+authRouter.post("/adminLogin", authAdminLogin)
 
 // authRouter.route("/:id")
 //       .get(getUser)

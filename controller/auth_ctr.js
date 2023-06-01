@@ -9,10 +9,14 @@ const authRegister = async (req, res) => {
 
     const user = await Users.findOne({ where: { email: email } })
     if (user) {
-        return res.send("user already exists")
+        return res.send({
+            msg: "user already exists"
+        })
     }
     if (!password.trim().match(/[A-Za-z0-9]+$/g)) {
-        return res.send("Password invalid")
+        return res.send({
+            msg: "Password invalid"
+        })
     }
 
     let hash = await bcrypt.hash(password, 12)
@@ -34,7 +38,9 @@ const authLogin = async (req, res) => {
         let founEmail = user.email === email
 
         if (!founEmail) {
-            return res.send("You haven't register")
+            return res.send({
+                msg: "You haven't register"
+            })
         }
 
         let check = await bcrypt.compare(password, user.password)
@@ -56,6 +62,37 @@ const authLogin = async (req, res) => {
                 msg: "Password wrong",
             });
         }
+    }
+    catch {
+        res.send({
+            msg: "error",
+        });
+    }
+}
+
+const authAdminLogin = async (req, res) => {
+    try {
+        const { email } = req.body
+
+        // if (req.isAdmin !== "admin") {
+        //     return res.send({
+        //         msg: "you are not admin",
+        //     });
+        // }
+
+        let user = await Users.findOne({ where: { email: email } });
+
+        if (user.role === "admin") {
+            return res.send({
+                msg: "Welcome to admin panel ✋"
+            })
+        }
+        else {
+            return res.send({
+                msg: "you aren't admin"
+            })
+        }
+
     }
     catch {
         res.send({
@@ -120,5 +157,6 @@ module.exports = {
     // updateUser,
     // getUser,
     authRegister,
-    authLogin
+    authLogin,
+    authAdminLogin
 }
