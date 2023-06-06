@@ -7,6 +7,9 @@ const Cars = sequelize.define("cars", {
     defaultValue: UUIDV4,
     primaryKey: true
   },
+  user_id: {
+    type: DataTypes.TEXT
+  },
   category_id_markasi: {
     type: DataTypes.TEXT
   },

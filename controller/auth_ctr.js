@@ -5,16 +5,17 @@ const jwt = require("jsonwebtoken")
 Users.sync({ force: false })
 
 const authRegister = async (req, res) => {
+ try{
     const { username, email, password } = req.body
 
     const user = await Users.findOne({ where: { email: email } })
     if (user) {
-        return res.send({
+        return res.status(200).send({
             msg: "user already exists"
         })
     }
     if (!password.trim().match(/[A-Za-z0-9]+$/g)) {
-        return res.send({
+        return res.status(400).send({
             msg: "Password invalid"
         })
     }
@@ -23,9 +24,15 @@ const authRegister = async (req, res) => {
 
     await Users.create({ username, email, password: hash })
 
-    return res.send({
+    return res.status(201).send({
         msg: "Registered!"
     })
+ }
+ catch(err) {
+    return res.send({
+        msg: "Some server error"
+    })
+ }
 
 }
 
@@ -38,7 +45,7 @@ const authLogin = async (req, res) => {
         let founEmail = user.email === email
 
         if (!founEmail) {
-            return res.send({
+            return res.status(404).send({
                 msg: "You haven't register"
             })
         }
@@ -65,7 +72,7 @@ const authLogin = async (req, res) => {
     }
     catch {
         res.send({
-            msg: "error",
+            msg: "Some server error",
         });
     }
 }

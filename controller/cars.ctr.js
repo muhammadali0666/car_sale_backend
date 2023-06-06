@@ -1,22 +1,26 @@
 const { Cars } = require("../model")
 const { Categories } = require("../model")
+const jwt = require("jsonwebtoken")
 
 Cars.sync({ force: false })
 
 const createCar = async (req, res) => {
   try {
     const { category_id_markasi, tanerovkasi, motor, year, color, distance, gearbook, narx, tashqi_rasm, discription } = req.body
+    const { token } = req.headers
+    const decoded = jwt.verify(token, process.env.SEKRET_KEY);
+    const decodedId = decoded.id
 
     let foundedMarka = await Categories.findOne({ where: { category_title: category_id_markasi } })
 
-    await Cars.create({ category_id_markasi: foundedMarka.id, tanerovkasi, motor, year, color, distance, gearbook, narx, tashqi_rasm, discription })
+    await Cars.create({ category_id_markasi: foundedMarka.id, user_id: decodedId, tanerovkasi, motor, year, color, distance, gearbook, narx, tashqi_rasm, discription })
     return res.status(200).send({
       msg: "Cteated car"
     })
   }
   catch (err) {
-    return res.send({
-      msg: "error"
+    return res.status(400).send({
+      msg: err.message
     })
   }
 }
@@ -28,8 +32,8 @@ const getCars = async (req, res) => {
     return res.json(Car)
   }
   catch (err) {
-    return res.send({
-      msg: "error"
+    return res.status(400).send({
+      msg: err.message
     })
   }
 }
@@ -41,8 +45,8 @@ const getCar = async (req, res) => {
     return res.json(Car)
   }
   catch (err) {
-    return res.send({
-      msg: "error"
+    return res.status(400).send({
+      msg: err.message
     })
   }
 }
