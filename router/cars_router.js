@@ -1,5 +1,5 @@
 const { Router } = require("express")
-const {createCar, getCars, getCar} = require("../controller/cars.ctr")
+const {createCar, getCars, getCar, getAllCars} = require("../controller/cars.ctr")
 
 const carRouter = Router()
 
@@ -61,8 +61,6 @@ const carRouter = Router()
  *         tashqi_rasm: image.png
  *         description: mersades-benz
  */
-
-
 
 /**
  * @swagger
@@ -138,6 +136,8 @@ carRouter.get("/get_cars/model/:id", getCars)
 */
 
 carRouter.get("/get_car_info/:id", getCar)
+
+carRouter.get("/get_all_car", getAllCars)
 
 
 module.exports = carRouter

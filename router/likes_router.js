@@ -10,3 +10,6 @@ likeRouter.get("/get_like", verifyToken, getLikes)
 
 
 module.exports = likeRouter
+
+
+// update users set role = 'admin' where id = 'f0b61130-e144-4009-8fa0-0b6843c5e310';

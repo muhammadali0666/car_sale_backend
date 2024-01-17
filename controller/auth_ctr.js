@@ -70,9 +70,9 @@ const authLogin = async (req, res) => {
             });
         }
     }
-    catch {
+    catch (err) {
         res.send({
-            msg: "Some server error",
+            msg: err.message
         });
     }
 }

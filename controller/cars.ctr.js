@@ -51,15 +51,21 @@ const getCar = async (req, res) => {
   }
 }
 
-// const getUser = async(req, res) => {
-//     const { id } = req.params 
-
-//     let user = await Users.findOne({ where: { id } });
-//    return res.json(user)
-// }
+const getAllCars = async (req, res) => {
+  try {
+    let Car = await Cars.findAll();
+    return res.json(Car)
+  }
+  catch (err) {
+    return res.status(400).send({
+      msg: err.message
+    })
+  }
+}
 
 module.exports = {
   createCar,
   getCars,
-  getCar
+  getCar,
+  getAllCars
 }
