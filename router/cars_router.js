@@ -1,5 +1,6 @@
 const { Router } = require("express")
 const {createCar, getCars, getCar, getAllCars} = require("../controller/cars.ctr")
+const {verifyToken} = require("../middleware/jwt.middleware")
 
 const carRouter = Router()
 
@@ -85,7 +86,7 @@ const carRouter = Router()
  *          description: error      
  */
 
-carRouter.post("/create_car", createCar)
+carRouter.post("/create_car", verifyToken, createCar)
 
 // get cars by category
 /** 
@@ -110,7 +111,7 @@ carRouter.post("/create_car", createCar)
 *         description: error message
 */
 
-carRouter.get("/get_cars/model/:id", getCars)
+carRouter.get("/get_cars/model/:id", verifyToken, getCars)
 
 // get one car with car_id
 /** 
@@ -135,9 +136,9 @@ carRouter.get("/get_cars/model/:id", getCars)
 *         description: error message
 */
 
-carRouter.get("/get_car_info/:id", getCar)
+carRouter.get("/get_car_info/:id", verifyToken, getCar)
 
-carRouter.get("/get_all_car", getAllCars)
+carRouter.get("/get_all_car",verifyToken, getAllCars)
 
 
 module.exports = carRouter
