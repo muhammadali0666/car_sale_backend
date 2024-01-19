@@ -1,5 +1,4 @@
 const jwt = require("jsonwebtoken");
-const { Users } = require("../model")
 
 const verifyAdmin = async (req, res, next) => {
   const token = req.headers.token
@@ -10,8 +9,8 @@ const verifyAdmin = async (req, res, next) => {
   try {
     const decoded = jwt.verify(token, process.env.SEKRET_KEY);
     req.email = decoded;
-    const admin = await Users.findOne({ where: { email: email } });
-    req.isAdmin = admin.rows[0].role;
+    // const admin = await Users.findOne({ where: { email: email } });
+    // req.isAdmin = admin.rows[0].role;
 
   } catch (err) {
     return res.status(401).send("Invalid Token");

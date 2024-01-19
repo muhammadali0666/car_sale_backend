@@ -6,6 +6,8 @@ const createCategory = async (req, res) => {
   try {
     const { category_title, category_img } = req.body
 
+    console.log(req.body);
+
     await Categories.create({ category_img, category_title })
     return res.status(200).send({
       msg: "Cteated category"
