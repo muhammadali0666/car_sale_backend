@@ -51,16 +51,28 @@ const authLogin = async (req, res) => {
     let check = await bcrypt.compare(password, user.password);
 
     if (check) {
+      let verifyAdmin =
+        user.role === "admin"
+          ? await jwt.sign(
+              { id: user.id, email: user.email },
+              process.env.SEKRET_KEY,
+              {
+                expiresIn: process.env.TIME,
+              }
+            )
+          : null;
       let token = await jwt.sign(
-        { id: user.id, email: user.email, role: user.role },
+        { id: user.id, email: user.email },
         process.env.SEKRET_KEY,
         {
           expiresIn: process.env.TIME,
         }
       );
+      let versus = verifyAdmin ? verifyAdmin : !verifyAdmin;
       return res.send({
         msg: "Success",
         token,
+        verifyAdmin,
       });
     } else {
       res.send({
@@ -80,19 +92,19 @@ const authAdminLogin = async (req, res) => {
 
     let user = await Users.findOne({ where: { email: email } });
 
-    if(!user) {
+    if (!user) {
       return res.status(401).send({
-        msg: "user not found"
-      })
+        msg: "user not found",
+      });
     }
 
     if (user.role !== "admin") {
-       res.send({
-         msg: "you are not admin",
-        });
-      } else {
-        res.send({
-         msg: "Welcome to admin panel ✋",
+      res.send({
+        msg: "you are not admin",
+      });
+    } else {
+      res.send({
+        msg: "Welcome to admin panel ✋",
       });
     }
   } catch {
