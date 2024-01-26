@@ -6,14 +6,14 @@ Cars.sync({ force: false })
 
 const createCar = async (req, res) => {
   try {
-    const { category_id_markasi, tanerovkasi, motor, year, color, distance, gearbook, narx, tashqi_rasm, discription } = req.body
+    const { category_id_markasi, title, tanerovkasi, motor, year, color, distance, gearbook, narx, tashqi_rasm, discription } = req.body
     const { token } = req.headers
     const decoded = jwt.verify(token, process.env.SEKRET_KEY);
     const decodedId = decoded.id
 
     let foundedMarka = await Categories.findOne({ where: { category_title: category_id_markasi } })
 
-    await Cars.create({ category_id_markasi: foundedMarka.id, user_id: decodedId, tanerovkasi, motor, year, color, distance, gearbook, narx, tashqi_rasm, discription })
+    await Cars.create({ category_id_markasi: foundedMarka.id, user_id: decodedId, title, tanerovkasi, motor, year, color, distance, gearbook, narx, tashqi_rasm, discription })
     return res.status(200).send({
       msg: "Cteated car"
     })

@@ -16,6 +16,9 @@ const Cars = sequelize.define("cars", {
   tanerovkasi: {
     type: DataTypes.TEXT
   },
+  title: {
+    type: DataTypes.TEXT
+  },
   motor: {
     type: DataTypes.TEXT
   },
