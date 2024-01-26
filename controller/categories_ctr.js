@@ -36,12 +36,38 @@ const getCategories = async (_, res) => {
   }
   catch (err) {
     return res.send({
-      msg: "error"
+      msg: err.message
+    })
+  }
+}
+
+const deleteCategory = async (req, res) => {
+  try{
+    const {id} = req.params
+
+    await Categories.findOne({ where: { id: id } })
+
+
+    await Categories.destroy({
+      returning: true,
+      plain: true,
+      where: {
+        id,
+      },
+    });
+    return res.send({
+      msg: "deleted category!"
+    });
+  }
+  catch(err) {
+    return res.send({
+      msg: err.message
     })
   }
 }
 
 module.exports = {
   createCategory,
-  getCategories
+  getCategories,
+  deleteCategory
 }
