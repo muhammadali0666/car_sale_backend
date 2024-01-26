@@ -11,6 +11,12 @@ const createCar = async (req, res) => {
     const decoded = jwt.verify(token, process.env.SEKRET_KEY);
     const decodedId = decoded.id
 
+    if(!category_id_markasi) {
+      return res.status(200).send({
+        msg: "Category is not defind"
+      })
+    }
+
     let foundedMarka = await Categories.findOne({ where: { category_title: category_id_markasi } })
 
     await Cars.create({ category_id_markasi: foundedMarka.id, user_id: decodedId, title, tanerovkasi, motor, year, color, distance, gearbook, narx, tashqi_rasm, discription })
@@ -63,9 +69,35 @@ const getAllCars = async (req, res) => {
   }
 }
 
+const deleteCar = async (req, res) => {
+  try{
+    const {id} = req.params
+
+    await Cars.findOne({ where: { id: id } })
+
+
+    await Cars.destroy({
+      returning: true,
+      plain: true,
+      where: {
+        id,
+      },
+    });
+    return res.send({
+      msg: "deleted car!"
+    });
+  }
+  catch(err) {
+    return res.send({
+      msg: err.message
+    })
+  }
+}
+
 module.exports = {
   createCar,
   getCars,
   getCar,
-  getAllCars
+  getAllCars,
+  deleteCar
 }

@@ -1,5 +1,5 @@
 const { Router } = require("express")
-const {createCar, getCars, getCar, getAllCars} = require("../controller/cars.ctr")
+const {createCar, getCars, getCar, getAllCars, deleteCar} = require("../controller/cars.ctr")
 const {verifyToken} = require("../middleware/jwt.middleware")
 
 const carRouter = Router()
@@ -139,6 +139,7 @@ carRouter.get("/get_cars/model/:id", verifyToken, getCars)
 carRouter.get("/get_car_info/:id", verifyToken, getCar)
 
 carRouter.get("/get_all_car",verifyToken, getAllCars)
+carRouter.delete("/delete_car/:id",verifyToken, deleteCar)
 
 
 module.exports = carRouter
