@@ -1,5 +1,6 @@
 const { Cars } = require("../model")
 const { Categories } = require("../model")
+const { Likes } = require("../model");
 const jwt = require("jsonwebtoken")
 
 Cars.sync({ force: false })
@@ -19,7 +20,8 @@ const createCar = async (req, res) => {
 
     let foundedMarka = await Categories.findOne({ where: { category_title: category_id_markasi } })
 
-    await Cars.create({ category_id_markasi: foundedMarka.id, user_id: decodedId, title, tanerovkasi, motor, year, color, distance, gearbook, narx, tashqi_rasm, discription })
+ let result = await Cars.create({ category_id_markasi: foundedMarka.id, user_id: decodedId, title, tanerovkasi, motor, year, color, distance, gearbook, narx, tashqi_rasm, discription })
+    await Likes.create({ car_id: result.dataValues.id })
     return res.status(200).send({
       msg: "Cteated car"
     })
@@ -72,9 +74,6 @@ const getAllCars = async (req, res) => {
 const deleteCar = async (req, res) => {
   try{
     const {id} = req.params
-
-    await Cars.findOne({ where: { id: id } })
-
 
     await Cars.destroy({
       returning: true,

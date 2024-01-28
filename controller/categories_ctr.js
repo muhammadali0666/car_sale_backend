@@ -45,9 +45,6 @@ const deleteCategory = async (req, res) => {
   try{
     const {id} = req.params
 
-    await Categories.findOne({ where: { id: id } })
-
-
     await Categories.destroy({
       returning: true,
       plain: true,

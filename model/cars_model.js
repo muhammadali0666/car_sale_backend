@@ -1,54 +1,54 @@
-const { sequelize, DataTypes } = require("../db/db_config")
-const { UUIDV4 } = require("sequelize")
+const { sequelize, DataTypes } = require("../db/db_config");
+const { UUIDV4 } = require("sequelize");
 
 const Cars = sequelize.define("cars", {
   id: {
     type: DataTypes.TEXT,
     defaultValue: UUIDV4,
-    primaryKey: true
+    primaryKey: true,
   },
   user_id: {
-    type: DataTypes.TEXT
+    type: DataTypes.TEXT,
   },
   category_id_markasi: {
-    type: DataTypes.TEXT
+    type: DataTypes.TEXT,
   },
   tanerovkasi: {
-    type: DataTypes.TEXT
+    type: DataTypes.TEXT,
   },
   title: {
-    type: DataTypes.TEXT
+    type: DataTypes.TEXT,
   },
   motor: {
-    type: DataTypes.TEXT
+    type: DataTypes.TEXT,
   },
   year: {
-    type: DataTypes.TEXT
+    type: DataTypes.TEXT,
   },
   color: {
-    type: DataTypes.TEXT
+    type: DataTypes.TEXT,
   },
   distance: {
-    type: DataTypes.TEXT
+    type: DataTypes.TEXT,
   },
   gearbook: {
-    type: DataTypes.TEXT
+    type: DataTypes.TEXT,
   },
   narx: {
-    type: DataTypes.TEXT
+    type: DataTypes.TEXT,
   },
   tashqi_rasm: {
-    type: DataTypes.TEXT
+    type: DataTypes.TEXT,
   },
   ichki_rasm: {
-    type: DataTypes.TEXT
+    type: DataTypes.TEXT,
   },
   discription: {
-    type: DataTypes.TEXT
+    type: DataTypes.TEXT,
   },
   mini_img: {
-    type: DataTypes.TEXT
-  }
-})
+    type: DataTypes.TEXT,
+  },
+});
 
 module.exports = Cars;

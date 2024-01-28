@@ -1,51 +1,106 @@
-const { Likes } = require("../model")
-const { Users } = require("../model")
-const { Cars } = require("../model")
-const jwt = require("jsonwebtoken")
+const { Likes, Users } = require("../model");
+const jwt = require("jsonwebtoken");
 
-Likes.sync({ force: false })
+Likes.sync({ force: false });
 
 const addLike = async (req, res) => {
   try {
-    const { user_id, car_id } = req.body
+    const { car_id } = req.body;
+    const { token } = req.headers;
+    const decoded = jwt.verify(token, process.env.SEKRET_KEY);
 
-    await Likes.create({ user_id, car_id })
-    return res.status(200).send({
-      msg: "added like"
-    })
-  }
-  catch (err) {
+    let foundedUser = await Likes.findOne({where: {user_id: decoded.id}});
+    let foundedCar = await Likes.findOne({ where: { car_id: car_id } });
+
+    // console.log(foundedUser.dataValues.user_id);
+    // console.log(foundedCar.dataValues.user_id);
+
+    // console.log(foundedCar.dataValues.user_id);
+
+    // if (!foundedCar.dataValues.user_id !== decoded.id) {
+      await Likes.create({ car_id, user_id: decoded.id });
+      return res.status(200).send({
+        msg: "added like",
+      });
+    // } 
+    // else if (foundedCar === null) {
+    //   await Likes.create({ car_id, user_id: decoded.id });
+    //   return res.status(200).send({
+    //     msg: "added like",
+    //   });
+    // } 
+    // else {
+    //   return res.status(200).send({
+    //     msg: "exists",
+    //   });
+    // }
+  } catch (err) {
     return res.send({
-      msg: "error"
-    })
+      msg: err.message,
+    });
+  }
+};
+
+const updateLike = async (req, res) => {
+  const {token} = req.headers
+  try {
+    const decoded = jwt.verify(token, process.env.SEKRET_KEY);
+      const likes = await Likes.findOne(
+          {
+              where: {
+                  user_id: decoded.id,
+                  car_id: req.body.car_id
+              }
+          })
+      if (!likes) {
+          const newLikes = await Likes.create({
+              user_id: decoded.id,
+              car_id: req.body.car_id
+          }, { returning: true })
+          // const user_id = await Likes.findOne({ where: { id: req.body.car_id } })
+          // const user = await Users.findOne({ where: { id: decoded.id } })
+          // if (user_id.user_id !== decoded.id) {
+          //     await user_message.create({
+          //         title: `${user.username} sizga like bosdi`,
+          //         userId: user_id.userId,
+          //         imgUrl: user.imgUrl,
+          //         video_img: user_id.videoUrl
+          //     })
+          // }
+          res.send({
+              msg: "Successfully liked",
+              likes: [newLikes]
+          })
+      } 
+      // else {
+      //     await likes.update({ isLike: !likes.isLike })
+      //     res.send({
+      //         message: "Like successfully updated",
+      //         likes: await Likes.findAll({ where: { video_id: likes.video_id } })
+      //     })
+      // }
+  } catch (error) {
+      return res.send({
+        msg: error.message
+      })
   }
 }
 
 const getLikes = async (req, res) => {
   try {
-    const { token } = req.headers
+    const { id } = req.params;
+    let likes = await Likes.findAll({ where: { car_id: id } });
 
-    const decoded = jwt.verify(token, process.env.SEKRET_KEY);
-    const decodedId = decoded.id
-
-    let likes = await Likes.findAll({ where: { user_id: decodedId } });
-    // console.log(likes[0].car_id);
-    const carId = likes[0].car_id
-
-    
-    let car = await Cars.findAll({where: {id: carId}})
-
-
-    return res.json(car)
-  }
-  catch (err) {
+    return res.json(likes);
+  } catch (err) {
     return res.send({
-      msg: err.message
-    })
+      msg: err.message,
+    });
   }
-}
+};
 
 module.exports = {
   addLike,
-  getLikes
-}
+  getLikes,
+  updateLike
+};

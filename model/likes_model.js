@@ -1,5 +1,6 @@
 const { sequelize, DataTypes } = require("../db/db_config")
 const { UUIDV4 } = require("sequelize")
+const Users = require("./register_model")
 
 const Likes = sequelize.define("likes", {
   id: {
@@ -14,5 +15,11 @@ const Likes = sequelize.define("likes", {
     type: DataTypes.TEXT
   }
 })
+
+
+Users.hasMany(Likes, {
+  foreignKey: "user_id"
+})
+
 
 module.exports = Likes;
