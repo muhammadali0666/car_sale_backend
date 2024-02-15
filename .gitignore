@@ -1,2 +1,9 @@
 /node_modules
 /.env
+ username: "postgres",
+  database: "car_sale_db",
+  password: process.env.PASSWORD,
+  port: 5432,
+  host: "localhost",
+  dialect: "postgres",
+  logging: false
