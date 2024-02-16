@@ -1,6 +1,7 @@
 const { Users } = require("../model");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
+const nodemailer = require("nodemailer");
 
 Users.sync({ force: false });
 
@@ -14,6 +15,7 @@ const authRegister = async (req, res) => {
         msg: "user already exists",
       });
     }
+
     if (!password.trim().match(/[A-Za-z0-9]+$/g)) {
       return res.status(400).send({
         msg: "Password invalid",
@@ -114,56 +116,46 @@ const authAdminLogin = async (req, res) => {
   }
 };
 
-// const getUsers = async(_, res) => {
+const sendCode = async (req, res) => {
+  try {
+    const {email} = req.body
+    let transporter = nodemailer.createTransport({
+      service: "gmail",
+      auth: {
+        user: "muhammadalishuhratjonov50@gmail.com",
+        pass: "gmlmvvatzkuedfqe",
+      },
+    });
 
-//     let users = await Users.findAll();
-//     res.json(users)
-// }
+    let randomNumber = Math.floor(Math.random() * 10000)
 
-// const getUser = async(req, res) => {
-//     const { id } = req.params
+    let mailOptions = {
+      from: "muhammadalishuhratjonov50@gmail.com",
+      to: `${email}`,
+      subject: "car sale verify code",
+      html: `<b> your verification code is ${randomNumber}</b>`,
+    };
 
-//     let user = await Users.findOne({ where: { id } });
-//    return res.json(user)
-// }
-
-// const deleteUser = async ( req, res ) => {
-//     const { id } = req.params
-
-//     const deletedUser = await Users.destroy({
-//         returning: true,
-//         plain: true,
-//         where: {
-//             id
-//         }
-//     })
-
-//    return res.send("deleted user!")
-
-// }
-
-// const updateUser = async (req, res) => {
-//     const { username, email, password } = req.body
-//     const { id } = req.params
-
-//     const updatedUser = await Users.update({ username, email, password }, {
-//         returning: true,
-//         plain: false,
-//         where: {
-//             id
-//         }
-//     })
-
-//     return res.send(updatedUser.filter(e => e))
-
-// }
+    transporter.sendMail(mailOptions, function (error, info) {
+      if (error) {
+        console.log(error);
+      } else {
+        console.log("Email sent: " + info.response);
+      }
+    });
+    res.send({
+      msg: "Success!",
+    });
+  } catch (err) {
+    return res.send({
+      message: err.message,
+    });
+  }
+};
 
 module.exports = {
-  // getUsers,
-  // deleteUser,
-  // updateUser,
-  // getUser,
   authRegister,
   authLogin,
   authAdminLogin,
+  sendCode
 };
