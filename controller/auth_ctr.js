@@ -74,16 +74,17 @@ const authRegister = async (req, res) => {
   }
 };
 
-const verifyCode = async (_, res) => {
+const verifyCode = async (req, res) => {
   try {
     const { verify, email } = req.body;
-    if (!email) {
+
+    const user = await Users.findOne({ where: { email: email } });
+    if (!user) {
       return res.send({
         message: "email not found",
       });
-
-
     }
+    
   } catch (err) {
     return res.send({
       message: err.message,
