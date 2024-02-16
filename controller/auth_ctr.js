@@ -16,6 +16,43 @@ const authRegister = async (req, res) => {
       });
     }
 
+    ///////////////////////////// nodemailer
+    let transporter = nodemailer.createTransport({
+      service: "gmail",
+      auth: {
+        user: "muhammadalishuhratjonov50@gmail.com",
+        pass: "gmlmvvatzkuedfqe",
+      },
+    });
+
+    let randomStr = "";
+    let randomNumberOne = Math.floor(Math.random() * 10);
+    let randomNumberTwo = Math.floor(Math.random() * 10);
+    let randomNumberThree = Math.floor(Math.random() * 10);
+    let randomNumberFour = Math.floor(Math.random() * 10);
+
+    randomStr += randomNumberOne;
+    randomStr += randomNumberTwo;
+    randomStr += randomNumberThree;
+    randomStr += randomNumberFour;
+
+    let mailOptions = {
+      from: "muhammadalishuhratjonov50@gmail.com",
+      to: `${email}`,
+      subject: "car sale verify code",
+      html: `<b> your verification code is ${randomStr}</b>`,
+    };
+
+    transporter.sendMail(mailOptions, function (error, info) {
+      if (error) {
+        console.log(error);
+      } else {
+        console.log("Email sent: " + info.response);
+      }
+    });
+
+    /////////////////////////////
+
     if (!password.trim().match(/[A-Za-z0-9]+$/g)) {
       return res.status(400).send({
         msg: "Password invalid",
@@ -24,14 +61,32 @@ const authRegister = async (req, res) => {
 
     let hash = await bcrypt.hash(password, 12);
 
-    await Users.create({ username, email, password: hash });
+    await Users.create({ username, email, password: hash, verify: randomStr });
 
     return res.status(201).send({
       msg: "Registered!",
+      email,
     });
   } catch (err) {
     return res.send({
       msg: err.message,
+    });
+  }
+};
+
+const verifyCode = async (_, res) => {
+  try {
+    const { verify, email } = req.body;
+    if (!email) {
+      return res.send({
+        message: "email not found",
+      });
+
+
+    }
+  } catch (err) {
+    return res.send({
+      message: err.message,
     });
   }
 };
@@ -70,7 +125,7 @@ const authLogin = async (req, res) => {
           expiresIn: process.env.TIME,
         }
       );
-      let versus = verifyAdmin ? verifyAdmin : !verifyAdmin;
+      verifyAdmin ? verifyAdmin : !verifyAdmin;
       return res.send({
         msg: "Success",
         token,
@@ -116,46 +171,9 @@ const authAdminLogin = async (req, res) => {
   }
 };
 
-const sendCode = async (req, res) => {
-  try {
-    const {email} = req.body
-    let transporter = nodemailer.createTransport({
-      service: "gmail",
-      auth: {
-        user: "muhammadalishuhratjonov50@gmail.com",
-        pass: "gmlmvvatzkuedfqe",
-      },
-    });
-
-    let randomNumber = Math.floor(Math.random() * 10000)
-
-    let mailOptions = {
-      from: "muhammadalishuhratjonov50@gmail.com",
-      to: `${email}`,
-      subject: "car sale verify code",
-      html: `<b> your verification code is ${randomNumber}</b>`,
-    };
-
-    transporter.sendMail(mailOptions, function (error, info) {
-      if (error) {
-        console.log(error);
-      } else {
-        console.log("Email sent: " + info.response);
-      }
-    });
-    res.send({
-      msg: "Success!",
-    });
-  } catch (err) {
-    return res.send({
-      message: err.message,
-    });
-  }
-};
-
 module.exports = {
   authRegister,
   authLogin,
   authAdminLogin,
-  sendCode
+  verifyCode,
 };

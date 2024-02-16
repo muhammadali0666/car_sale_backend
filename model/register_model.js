@@ -13,7 +13,8 @@ const Users = sequelize.define("users", {
   },
   email: {
     type: DataTypes.TEXT,
-    unique: true
+    unique: true,
+    allowNull: false
   },
   password: {
     type: DataTypes.TEXT
@@ -22,6 +23,10 @@ const Users = sequelize.define("users", {
     type: DataTypes.TEXT,
     defaultValue: 'user'
   },
+  verify: {
+    type: DataTypes.TEXT,
+    allowNull: false
+  }
 })
 
 module.exports = Users;

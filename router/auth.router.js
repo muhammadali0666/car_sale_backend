@@ -1,5 +1,5 @@
 const { Router } = require("express")
-const { authRegister, authLogin, authAdminLogin, sendCode } = require("../controller/auth_ctr")
+const { authRegister, authLogin, authAdminLogin, verifyCode } = require("../controller/auth_ctr")
 
 const authRouter = Router()
 
@@ -113,7 +113,7 @@ authRouter.post("/register", authRegister)
 
 authRouter.post("/login", authLogin)
 authRouter.post("/adminLogin", authAdminLogin)
-authRouter.post("/verify", sendCode)
+authRouter.post("/verify", verifyCode)
 
 
 module.exports = authRouter
