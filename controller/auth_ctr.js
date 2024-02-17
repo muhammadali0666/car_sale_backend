@@ -79,9 +79,29 @@ const verifyCode = async (req, res) => {
     const { verify, email } = req.body;
 
     const user = await Users.findOne({ where: { email: email } });
-    if (!user) {
+
+    if(!user.email){
       return res.send({
-        message: "email not found",
+        message: "user not found"
+      })
+    }
+    if(user.verify !== verify){
+      return res.send({
+        msg: "verify code mistake"
+      });
+    }
+
+    if(user.verify === verify) {
+      let token = await jwt.sign(
+        { id: user.id, email: user.email },
+        process.env.SEKRET_KEY,
+        {
+          expiresIn: process.env.TIME,
+        }
+      );
+      return res.send({
+        msg: "Success",
+        token,
       });
     }
     
