@@ -30,11 +30,15 @@ const authRegister = async (req, res) => {
     let randomNumberTwo = Math.floor(Math.random() * 10);
     let randomNumberThree = Math.floor(Math.random() * 10);
     let randomNumberFour = Math.floor(Math.random() * 10);
+    let randomNumberFiveth = Math.floor(Math.random() * 10);
+    let randomNumberSixth = Math.floor(Math.random() * 10);
 
     randomStr += randomNumberOne;
     randomStr += randomNumberTwo;
     randomStr += randomNumberThree;
     randomStr += randomNumberFour;
+    randomStr += randomNumberFiveth;
+    randomStr += randomNumberSixth;
 
     let mailOptions = {
       from: "muhammadalishuhratjonov50@gmail.com",
