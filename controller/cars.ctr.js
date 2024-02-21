@@ -1,79 +1,114 @@
-const { Cars } = require("../model")
-const { Categories } = require("../model")
+const { Cars } = require("../model");
+const { Categories } = require("../model");
 const { Likes } = require("../model");
-const jwt = require("jsonwebtoken")
+const jwt = require("jsonwebtoken");
 
-Cars.sync({ force: false })
+Cars.sync({ force: false });
 
 const createCar = async (req, res) => {
   try {
-    const { category_id_markasi, title, tanerovkasi, motor, year, color, distance, gearbook, narx, tashqi_rasm, discription } = req.body
-    const { token } = req.headers
+    const {
+      category_id_markasi,
+      title,
+      tanerovkasi,
+      motor,
+      year,
+      color,
+      distance,
+      gearbook,
+      narx,
+      tashqi_rasm,
+      discription,
+    } = req.body;
+    const { token } = req.headers;
     const decoded = jwt.verify(token, process.env.SEKRET_KEY);
-    const decodedId = decoded.id
+    const decodedId = decoded.id;
 
-    if(!category_id_markasi) {
+    if (
+      !category_id_markasi ||
+      !title ||
+      !tanerovkasi ||
+      !motor ||
+      !year ||
+      !color ||
+      !distance ||
+      !gearbook ||
+      !narx ||
+      !tashqi_rasm ||
+      !discription
+    ) {
       return res.status(200).send({
-        msg: "Category is not defind"
-      })
+        msg: "all fields require!",
+      });
     }
 
-    let foundedMarka = await Categories.findOne({ where: { category_title: category_id_markasi } })
+    let foundedMarka = await Categories.findOne({
+      where: { category_title: category_id_markasi },
+    });
 
- let result = await Cars.create({ category_id_markasi: foundedMarka.id, user_id: decodedId, title, tanerovkasi, motor, year, color, distance, gearbook, narx, tashqi_rasm, discription })
-    await Likes.create({ car_id: result.dataValues.id })
+    let result = await Cars.create({
+      category_id_markasi: foundedMarka.id,
+      user_id: decodedId,
+      title,
+      tanerovkasi,
+      motor,
+      year,
+      color,
+      distance,
+      gearbook,
+      narx,
+      tashqi_rasm,
+      discription,
+    });
+    await Likes.create({ car_id: result.dataValues.id });
     return res.status(200).send({
-      msg: "Cteated car"
-    })
-  }
-  catch (err) {
+      msg: "Cteated car",
+    });
+  } catch (err) {
     return res.status(400).send({
-      msg: err.message
-    })
+      msg: err.message,
+    });
   }
-}
+};
 
 const getCars = async (req, res) => {
   try {
-    const { id } = req.params
+    const { id } = req.params;
     let Car = await Cars.findAll({ where: { category_id_markasi: id } });
-    return res.json(Car)
-  }
-  catch (err) {
+    return res.json(Car);
+  } catch (err) {
     return res.status(400).send({
-      msg: err.message
-    })
+      msg: err.message,
+    });
   }
-}
+};
 
 const getCar = async (req, res) => {
   try {
-    const { id } = req.params
+    const { id } = req.params;
     let Car = await Cars.findAll({ where: { id: id } });
-    return res.json(Car)
-  }
-  catch (err) {
+    return res.json(Car);
+  } catch (err) {
     return res.status(400).send({
-      msg: err.message
-    })
+      msg: err.message,
+    });
   }
-}
+};
 
 const getAllCars = async (req, res) => {
   try {
     let Car = await Cars.findAll();
-    return res.json(Car)
-  }
-  catch (err) {
+    return res.json(Car);
+  } catch (err) {
     return res.status(400).send({
-      msg: err.message
-    })
+      msg: err.message,
+    });
   }
-}
+};
 
 const deleteCar = async (req, res) => {
-  try{
-    const {id} = req.params
+  try {
+    const { id } = req.params;
 
     await Cars.destroy({
       returning: true,
@@ -83,20 +118,19 @@ const deleteCar = async (req, res) => {
       },
     });
     return res.send({
-      msg: "deleted car!"
+      msg: "deleted car!",
+    });
+  } catch (err) {
+    return res.send({
+      msg: err.message,
     });
   }
-  catch(err) {
-    return res.send({
-      msg: err.message
-    })
-  }
-}
+};
 
 module.exports = {
   createCar,
   getCars,
   getCar,
   getAllCars,
-  deleteCar
-}
+  deleteCar,
+};
