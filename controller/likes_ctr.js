@@ -1,4 +1,4 @@
-const { Likes, Users } = require("../model");
+const { Likes } = require("../model");
 const jwt = require("jsonwebtoken");
 
 Likes.sync({ force: false });
@@ -9,8 +9,8 @@ const addLike = async (req, res) => {
     const { token } = req.headers;
     const decoded = jwt.verify(token, process.env.SEKRET_KEY);
 
-    let foundedUser = await Likes.findOne({where: {user_id: decoded.id}});
-    let foundedCar = await Likes.findOne({ where: { car_id: car_id } });
+   await Likes.findOne({where: {user_id: decoded.id}});
+     await Likes.findOne({ where: { car_id: car_id } });
 
     // console.log(foundedUser.dataValues.user_id);
     // console.log(foundedCar.dataValues.user_id);

@@ -2,7 +2,6 @@ const { Cars } = require("../model");
 const { Categories } = require("../model");
 const { Likes } = require("../model");
 const jwt = require("jsonwebtoken");
-const axios = require('axios');
 
 Cars.sync({ force: false });
 
