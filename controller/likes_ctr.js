@@ -12,28 +12,10 @@ const addLike = async (req, res) => {
     await Likes.findOne({ where: { user_id: decoded.id } });
     await Likes.findOne({ where: { car_id: car_id } });
 
-    // console.log(foundedUser.dataValues.user_id);
-    // console.log(foundedCar.dataValues.user_id);
-
-    // console.log(foundedCar.dataValues.user_id);
-
-    // if (!foundedCar.dataValues.user_id !== decoded.id) {
     await Likes.create({ car_id, user_id: decoded.id });
     return res.status(200).send({
       msg: "added like",
     });
-    // }
-    // else if (foundedCar === null) {
-    //   await Likes.create({ car_id, user_id: decoded.id });
-    //   return res.status(200).send({
-    //     msg: "added like",
-    //   });
-    // }
-    // else {
-    //   return res.status(200).send({
-    //     msg: "exists",
-    //   });
-    // }
   } catch (err) {
     return res.send({
       msg: err.message,
