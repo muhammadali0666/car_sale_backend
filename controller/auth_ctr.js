@@ -44,7 +44,7 @@ const authRegister = async (req, res) => {
       from: "muhammadalishuhratjonov50@gmail.com",
       to: `${email}`,
       subject: "car sale verify code",
-      html: `<b> your verification code is ${randomStr}</b>`,
+      html: `<b> your verification code is <span style="font-size: 30px; color: blue;">${randomStr}</span></b>`,
     };
 
     transporter.sendMail(mailOptions, function (error, info) {
@@ -91,7 +91,7 @@ const verifyCode = async (req, res) => {
     }
     if(user.verify !== verify){
       return res.send({
-        msg: "verify code mistake"
+        message: "verify code mistake"
       });
     }
 
@@ -104,7 +104,7 @@ const verifyCode = async (req, res) => {
         }
       );
       return res.send({
-        msg: "Success",
+        message: "Success",
         token,
       });
     }
